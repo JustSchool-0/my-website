@@ -1,34 +1,63 @@
 const target = document.querySelector('.target');
 const gameContainer = document.querySelector('.game-container');
+const infoDisplay = document.querySelector('.display');
 const timerDisplay = document.querySelector('.timer');
 const scoreDisplay = document.querySelector('.score');
+const gameOverPopup = document.querySelector('.game-over-popup');
+const restartButton = document.getElementById('restart-button');
 
 let targetMoving = false;
 const targetAnimationLength = 200;
 
 let score = 0;
-let timer = 120;
-const initialTime = 5;
+const initialTime = 1;
+let timer = initialTime;
 let gameInterval;
 let isGameRunning = false;
 
+hideGameOverPopup();
+onResize();
+target.addEventListener('click', startGame);
+addEventListener("resize", onResize);
+restartButton.addEventListener('click', () => {
+    hideGameOverPopup();
+    restartGame();
+});
+
+function onResize() {
+    gameContainer.style.width = window.innerWidth + "px";
+    gameContainer.style.height = (window.innerHeight - parseInt(gameContainer.style.marginTop, 10)) + "px";
+}
+
+function intersectsInfoDisplay(left, top, width, height) {
+    const infoRect = infoDisplay.getBoundingClientRect();
+    const right = left + width; // Calculate the right edge
+    const bottom = top + height; // Calculate the bottom edge
+    return (
+        left < infoRect.right &&
+        right > infoRect.left &&
+        top < infoRect.bottom &&
+        bottom > infoRect.top
+    );
+}
+
 function getRandomPos() {
-    const maxX = gameContainer.clientWidth - target.clientWidth;
-    const maxY = gameContainer.clientHeight - target.clientHeight;
+    const maxX = parseInt(gameContainer.style.width, 10) - target.clientWidth;
+    const maxY = parseInt(gameContainer.style.height, 10) - target.clientHeight;
 
     // Calculate the maximum allowable X and Y coordinates to stay within bounds
     const maxXAllowed = Math.max(maxX, 0); // Ensure it's not negative
     const maxYAllowed = Math.max(maxY, 0); // Ensure it's not negative
 
-    // Calculate the maximum allowable X and Y coordinates considering the info display
-    const infoDisplay = document.querySelector('.display');
-    const infoRect = infoDisplay.getBoundingClientRect();
-    const minXAllowed = infoRect.right; // Ensure it's not left of the info display
-    const minYAllowed = infoRect.bottom; // Ensure it's not above the info display
-
     // Generate random X and Y coordinates within the allowed bounds
-    const randX = minXAllowed + Math.random() * (maxXAllowed - minXAllowed);
-    const randY = minYAllowed + Math.random() * (maxYAllowed - minYAllowed);
+    let randX = Math.random() * maxXAllowed;
+    let randY = Math.random() * maxYAllowed;
+
+    // Ensure the pos isn't under the info display
+    while (intersectsInfoDisplay(randX, randY, parseInt(target.style.width, 10), parseInt(target.style.height, 10))) {
+        randX = Math.random() * maxXAllowed;
+        randY = Math.random() * maxYAllowed;
+    }
 
     return {
         x: randX,
@@ -37,10 +66,10 @@ function getRandomPos() {
 }
 
 function updateTimer() {
-    timerDisplay.textContent = `Time: ${timer}s`;
+    timerDisplay.textContent = `Time ${timer}s`;
 
     if (timer === 0) {
-        endGame();
+        endGame(true);
     } else {
         timer--;
     }
@@ -49,6 +78,15 @@ function updateTimer() {
 function moveTarget() {
     if (!targetMoving) {
         const pos = getRandomPos();
+        // Generate random duration values between min and max
+        const min = 100;
+        const max = 300;
+        const randomDurationLeft = Math.floor(Math.random() * (max - min + 1) + min);
+        const randomDurationTop = Math.floor(Math.random() * (max - min + 1) + min);
+
+        // Apply the random duration values to the CSS transition property
+        target.style.transition = `left ${randomDurationLeft}ms ease, top ${randomDurationTop}ms ease`;
+
         target.style.left = pos.x + 'px';
         target.style.top = pos.y + 'px';
 
@@ -62,10 +100,11 @@ function moveTarget() {
 function startGame() {
     if (!isGameRunning) {
         isGameRunning = true;
+        hideGameOverPopup();
         gameContainer.classList.add('running');
         score = 0;
         timer = initialTime; // Reset the timer
-        scoreDisplay.textContent = 'Paps: ~';
+        scoreDisplay.textContent = 'Paps ~';
         target.textContent = '';
         target.style.display = 'block';
         target.style.left = '50%';
@@ -76,19 +115,34 @@ function startGame() {
     }
 }
 
-function endGame() {
+function restartGame() {
+    endGame(false);
+    target.style.display = 'block';
+    target.style.left = '50%';
+    target.style.top = '50%';
+}
+
+function endGame(showPopup) {
     gameContainer.classList.remove('running');
     clearInterval(gameInterval);
     target.removeEventListener('click', incrementScore);
     target.style.display = 'none';
-    alert(`Game Over! You papped the bubble ${score} times!`);
+    if (showPopup) {
+        showGameOverPopup();
+    }
     isGameRunning = false;
 }
 
 function incrementScore() {
     score++;
-    scoreDisplay.textContent = `Paps: ${score}`;
+    scoreDisplay.textContent = `Paps ${score}`;
     moveTarget();
 }
 
-target.addEventListener('click', startGame);
+function showGameOverPopup() {
+    gameOverPopup.style.display = 'block';
+}
+
+function hideGameOverPopup() {
+    gameOverPopup.style.display = 'none';
+}

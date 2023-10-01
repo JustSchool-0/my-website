@@ -12,10 +12,26 @@
     }
 }
 
+@keyframes fadeIn {
+    0% {
+        background-color: rgba(255, 255, 255, 5%);
+    }
+    100% {
+        background-color: rgba(255, 255, 255, 35%);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        background-color: rgba(255, 255, 255, 35%);
+    }
+    100% {
+        background-color: rgba(255, 255, 255, 5%);
+    }
+}
+
 body {
     margin: 0;
-    overflow: hidden;
-    background-color: hsl(0, 0%, 50%);
 
     background-image: url('./assets/cat_cute_ball.jpg');
     background-size: cover;
@@ -26,9 +42,10 @@ body {
 }
 
 .display {
-    background: rgba(255, 255, 255, 15%); /* Semi-transparent white background */
+    border: 1px solid rgba(255, 255, 255, 10%);
+    background-color: rgba(255, 255, 255, 10%); /* Semi-transparent white background */
     backdrop-filter: blur(5px); /* Apply a blur effect to elements behind */
-    padding: 20px;
+    padding: 5px;
     border-radius: 20px;
     text-align: center;
     color: #ffffff;
@@ -37,7 +54,7 @@ body {
     left: 50%;
     transform: translateX(-50%); /* Center horizontally */
     width: 300px;
-    z-index: 1; /* Render above other content */
+    z-index: 2; /* Render above other content */
 }
 
 .header {
@@ -52,8 +69,59 @@ body {
 }
 
 .timer, .score {
-    font-size: 20px;
+    font-size: 16px;
+    letter-spacing: 2px;
     padding: 10px;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 10%);
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    text-transform: uppercase;
+}
+
+.game-over-popup {
+    display: none; /* Initially hide the popup */
+    position: fixed; /* Fixed position to keep it centered */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the popup */
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 10%);
+    border: 1px solid rgba(255, 255, 255, 10%);
+    backdrop-filter: blur(5px);
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 2;
+}
+
+.game-over-popup #restart-button {
+    display: inline-block;
+    padding: 24px 32px;
+    text-decoration: none;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 10%);
+    border: 1px solid rgba(255, 255, 255, 10%);
+    backdrop-filter: blur(30px);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.game-over-popup #restart-button {
+    background-color: rgba(255, 255, 255, 10%);
+    transition: background-color 500ms ease-out;
+}
+
+.game-over-popup #restart-button:hover {
+    animation: fadeIn 500ms ease-out forwards;
+}
+
+.game-over-popup #restart-button:not(:hover) {
+    animation: fadeOut 500ms ease-out forwards;
 }
 
 .game-container {
@@ -61,7 +129,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
 /* Apply the ripple animation to the target when the game is not running */
