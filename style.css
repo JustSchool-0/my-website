@@ -1,3 +1,86 @@
+@keyframes ripple {
+    0% {
+        transform: scale(1); /* Start with normal scale */
+        opacity: 0; /* Start with no opacity */
+    }
+    50% {
+        opacity: 0.75; /* Begin to fade in */
+    }
+    100% {
+        transform: scale(3); /* Expand to a larger scale */
+        opacity: 0; /* Fade out */
+    }
+}
+
 body {
-    background: aqua;
+    margin: 0;
+    overflow: hidden;
+    background-color: hsl(0, 0%, 50%);
+
+    background-image: url('./assets/cat_cute_ball.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; /* Prevent image repetition */
+    background-attachment: fixed; /* Fixed background for scrolling */
+    background-position: center center; /* Center the background image */
+    font-family: Arial, sans-serif;
+}
+
+.display {
+    background: rgba(255, 255, 255, 15%); /* Semi-transparent white background */
+    backdrop-filter: blur(5px); /* Apply a blur effect to elements behind */
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    color: #ffffff;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    width: 300px;
+    z-index: 1; /* Render above other content */
+}
+
+.header {
+    font-style: italic;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+}
+
+.timer, .score {
+    font-size: 20px;
+    padding: 10px;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+/* Apply the ripple animation to the target when the game is not running */
+.game-container:not(.running) .target {
+    animation: ripple 2s ease-out infinite; /* Adjust the animation duration as needed */
+    transform-origin: center center; /* Set the origin for the ripple effect to the center */
+}
+
+.target {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: calc(50% - 50px); /* Center vertically */
+    left: calc(50% - 50px); /* Center horizontally */
+    border-radius: 50%; /* Circle */
+    cursor: pointer;
+    transition: left 200ms ease, top 200ms ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
 }
