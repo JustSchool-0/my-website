@@ -129,7 +129,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 150px;
+    top: 150px;
 }
 
 /* Apply the ripple animation to the target when the game is not running */

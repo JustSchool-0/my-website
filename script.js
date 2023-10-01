@@ -1,5 +1,5 @@
-const target = document.querySelector('.target');
 const gameContainer = document.querySelector('.game-container');
+const target = document.querySelector('.target');
 const infoDisplay = document.querySelector('.display');
 const timerDisplay = document.querySelector('.timer');
 const scoreDisplay = document.querySelector('.score');
@@ -26,7 +26,9 @@ restartButton.addEventListener('click', () => {
 
 function onResize() {
     gameContainer.style.width = window.innerWidth + "px";
-    gameContainer.style.height = (window.innerHeight - parseInt(gameContainer.style.marginTop, 10)) + "px";
+    gameContainer.style.top = 150 + "px";
+    const height = window.innerHeight - parseInt(gameContainer.style.top, 10);
+    gameContainer.style.height = height + "px";
 }
 
 function intersectsInfoDisplay(left, top, width, height) {
@@ -42,8 +44,9 @@ function intersectsInfoDisplay(left, top, width, height) {
 }
 
 function getRandomPos() {
-    const maxX = parseInt(gameContainer.style.width, 10) - target.clientWidth;
-    const maxY = parseInt(gameContainer.style.height, 10) - target.clientHeight;
+    const gameContainerRect = gameContainer.getBoundingClientRect();
+    const maxX = gameContainerRect.width - target.clientWidth;
+    const maxY = gameContainerRect.height - target.clientHeight;
 
     // Calculate the maximum allowable X and Y coordinates to stay within bounds
     const maxXAllowed = Math.max(maxX, 0); // Ensure it's not negative
@@ -54,7 +57,7 @@ function getRandomPos() {
     let randY = Math.random() * maxYAllowed;
 
     // Ensure the pos isn't under the info display
-    while (intersectsInfoDisplay(randX, randY, parseInt(target.style.width, 10), parseInt(target.style.height, 10))) {
+    while (intersectsInfoDisplay(randX, randY, 100, 100)) {
         randX = Math.random() * maxXAllowed;
         randY = Math.random() * maxYAllowed;
     }
