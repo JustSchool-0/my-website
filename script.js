@@ -10,7 +10,7 @@ let targetMoving = false;
 const targetAnimationLength = 200;
 
 let score = 0;
-const initialTime = 1;
+const initialTime = 10;
 let timer = initialTime;
 let gameInterval;
 let isGameRunning = false;
